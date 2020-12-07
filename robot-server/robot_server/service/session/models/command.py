@@ -88,6 +88,7 @@ class SetHasCalibrationBlockRequest(BaseModel):
 
 
 CommandDataType = typing.Union[
+    UpdateTiprackRequest,
     SetHasCalibrationBlockRequest,
     JogPosition,
     LiquidRequest,
