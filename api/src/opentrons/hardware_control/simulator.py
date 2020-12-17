@@ -5,6 +5,7 @@ import logging
 from threading import Event
 from typing import (Dict, Optional, List, Tuple,
                     TYPE_CHECKING, Sequence)
+from typing_extensions import Final
 from contextlib import contextmanager
 
 from opentrons_shared_data.pipette import dummy_model_for_name
@@ -34,7 +35,10 @@ if TYPE_CHECKING:
 MODULE_LOG = logging.getLogger(__name__)
 
 
-_HOME_POSITION = {'X': 418.0, 'Y': 353.0, 'Z': 218.0,
+_HOME_POSITION: Final = {'X': 418.0, 'Y': 353.0, 'Z': 218.0,
+                         'A': 218.0, 'B': 19.0, 'C': 19.0}
+
+_BOUNDS: Final = {'X': 418.0, 'Y': 370.0, 'Z': 218.0,
                   'A': 218.0, 'B': 19.0, 'C': 19.0}
 
 
@@ -261,7 +265,7 @@ class Simulator:
     @property
     def axis_bounds(self) -> Dict[Axis, Tuple[float, float]]:
         """ The (minimum, maximum) bounds for each axis. """
-        return {Axis[ax]: (0, pos) for ax, pos in _HOME_POSITION.items()
+        return {Axis[ax]: (0, pos) for ax, pos in _BOUNDS.items()
                 if ax not in 'BC'}
 
     @property

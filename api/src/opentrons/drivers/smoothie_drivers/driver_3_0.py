@@ -5,6 +5,7 @@ import logging
 from time import sleep, time
 from threading import Event, RLock
 from typing import Any, Dict, Optional, Union, List, Tuple
+from typing_extensions import Final
 
 from math import isclose
 from serial.serialutil import SerialException  # type: ignore
@@ -30,14 +31,15 @@ ERROR_KEYWORD = 'error'
 ALARM_KEYWORD = 'alarm'
 
 # TODO (artyom, ben 20171026): move to config
-HOMED_POSITION: Dict[str, float] = {
-    'X': 418,
-    'Y': 353,
-    'Z': 218,
-    'A': 218,
-    'B': 19,
-    'C': 19
+HOMED_POSITION: Final = {
+    'X': 418.0,
+    'Y': 353.0,
+    'Z': 218.0,
+    'A': 218.0,
+    'B': 19.0,
+    'C': 19.0
 }
+Y_BOUND_OVERRIDE: Final = 370
 
 
 PLUNGER_BACKLASH_MM = 0.3
@@ -391,8 +393,14 @@ class SmoothieDriver_3_0_0:
         self._gpio_chardev = gpio_chardev
 
     @property
-    def homed_position(self):
+    def homed_position(self) -> Dict[str, float]:
         return self._homed_position.copy()
+
+    @property
+    def axis_bounds(self) -> Dict[str, float]:
+        bounds = {k: v for k, v in self._homed_position.items()}
+        bounds['Y'] = Y_BOUND_OVERRIDE
+        return bounds
 
     def _update_position(self, target):
         self._position.update({
