@@ -37,6 +37,12 @@ class LoadLabwareRequest(BaseModel):
         description="The labware definition version")
 
 
+class LoadTiprackRequest(BaseModel):
+    tiprackDefinition: typing.Optional[dict] = Field(
+        None,
+        description="The tiprack definition to load into a user flow")
+
+
 class LoadLabwareResponse(BaseModel):
     labwareId: IdentifierType
     definition: LabwareDefinition
@@ -88,7 +94,7 @@ class SetHasCalibrationBlockRequest(BaseModel):
 
 
 CommandDataType = typing.Union[
-    UpdateTiprackRequest,
+    LoadTiprackRequest,
     SetHasCalibrationBlockRequest,
     JogPosition,
     LiquidRequest,
@@ -193,6 +199,11 @@ class SetHasCalibrationBlockRequestM(BasicSessionCommand):
     data: SetHasCalibrationBlockRequest
 
 
+class LoadTiprackRequestM(BasicSessionCommand):
+    command: Literal[CalibrationCommand.load_labware]
+    data: LoadTiprackRequest
+
+
 class DeckCalibrationCommandRequest(EmptySessionCommand):
     command: Literal[
         DeckCalibrationCommand.move_to_point_two,
@@ -229,6 +240,7 @@ RequestTypes = typing.Union[
     TipRequestM,
     CalibrationRequest,
     JogRequest,
+    LoadTiprackRequestM,
     SetHasCalibrationBlockRequestM,
     DeckCalibrationCommandRequest,
     CheckCalibrationCommandRequest
